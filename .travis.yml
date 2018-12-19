@@ -1,7 +1,7 @@
 sudo: false
 language: scala
 jdk: oraclejdk8
-scala: 2.12.7
+scala: 2.12.8
 script: sbt  headerCheck test:headerCheck scalafmtCheck test:scalafmtCheck test
 cache:
   directories:
