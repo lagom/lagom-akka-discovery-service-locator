@@ -21,23 +21,23 @@ private[lagom] class ServiceNameMapper(config: Config) {
   private val defaultPortProtocol = readConfigValue(config, "defaults.port-protocol").toOption
   private val defaultScheme = readConfigValue(config, "defaults.scheme").toOption
 
-  sealed trait ConfigValue {
+  private sealed trait ConfigValue {
     def toOption =
       this match {
         case NonEmpty(v) => Some(v)
         case _ => None
       }
   }
-  object ConfigValue {
+  private object ConfigValue {
     def apply(value: String) =
      if (value.trim.isEmpty) Empty
      else NonEmpty(value.trim)
   }
-  case object Undefined extends ConfigValue
-  case object Empty extends ConfigValue
-  case class NonEmpty(value: String) extends ConfigValue
+  private case object Undefined extends ConfigValue
+  private case object Empty extends ConfigValue
+  private case class NonEmpty(value: String) extends ConfigValue
 
-  private[lagom] def readConfigValue(config: Config, name: String) = {
+  private def readConfigValue(config: Config, name: String) = {
     if (config.hasPathOrNull(name)) {
       if (config.getIsNull(name)) Empty
       else ConfigValue(config.getString(name))
@@ -77,7 +77,7 @@ private[lagom] class ServiceNameMapper(config: Config) {
       }
       .toMap
 
-  private[lagom] def parseSrv(name: String) =
+  private def parseSrv(name: String) =
     if (LookupBuilder.isValidSrv(name)) LookupBuilder.parseSrv(name)
     else Lookup(name, defaultPortName, defaultPortProtocol)
 
