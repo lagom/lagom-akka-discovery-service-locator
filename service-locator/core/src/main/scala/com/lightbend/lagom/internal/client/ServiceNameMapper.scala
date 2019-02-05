@@ -35,7 +35,7 @@ private[lagom] class ServiceNameMapper(config: Config) {
         val configEntry = entry.getValue.asInstanceOf[ConfigObject].toConfig
 
         def getOptionString(name: String) =
-          if (configEntry.hasPath(name)) Some(configEntry.getString(name))
+          if (configEntry.hasPath(name)) Some(configEntry.getString(name).trim)
           else None
 
         val lookup: Lookup =
@@ -43,7 +43,15 @@ private[lagom] class ServiceNameMapper(config: Config) {
             .map(parseSrv)
             .getOrElse(Lookup(entry.getKey, defaultPortName, defaultPortProtocol))
 
-        val scheme = getOptionString("scheme").orElse(defaultScheme)
+        // if the user didn't explicitly set a value, use the default scheme,
+        // otherwise honour user settings.
+        val scheme =
+          getOptionString("scheme") match {
+            case None => defaultScheme
+            // this is the case the user explicitly set the scheme to empty string
+            case Some("") => None
+            case anyOther => anyOther
+          }
 
         entry.getKey -> ServiceLookup(lookup, scheme)
       }
