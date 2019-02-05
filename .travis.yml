@@ -35,7 +35,7 @@ git:
   depth: false
 
 # This defines the default "test" stage
-script: sbt ++TRAVIS_SCALA_VERSION headerCheck test:headerCheck scalafmtCheck test:scalafmtCheck test
+script: sbt ++$TRAVIS_SCALA_VERSION headerCheck test:headerCheck scalafmtCheck test:scalafmtCheck test
 
 jobs:
   include:
