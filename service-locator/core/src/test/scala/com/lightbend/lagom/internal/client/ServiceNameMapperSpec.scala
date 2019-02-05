@@ -35,7 +35,7 @@ class ServiceNameMapperSpec extends WordSpec with Matchers {
 
     "parse an unqualified Kubernetes service name" in {
       val serviceLookup = parser.mapLookupQuery("myservice")
-      val lookup= serviceLookup.lookup
+      val lookup = serviceLookup.lookup
       lookup.serviceName should be("myservice")
       lookup.portName should be(Some("http"))
       lookup.protocol should be(Some("tcp"))
@@ -65,7 +65,8 @@ class ServiceNameMapperSpec extends WordSpec with Matchers {
 
     "not attempt to parse the string if regex isn't specified" in {
       val lookup = createParser("""service-lookup-regex = "" """)
-        .mapLookupQuery("_fooname._fooprotocol.myservice").lookup
+        .mapLookupQuery("_fooname._fooprotocol.myservice")
+        .lookup
       lookup.serviceName should be("_fooname._fooprotocol.myservice")
       lookup.portName should be(Some("http"))
       lookup.protocol should be(Some("tcp"))
@@ -73,13 +74,15 @@ class ServiceNameMapperSpec extends WordSpec with Matchers {
 
     "include a suffix if configured" in {
       createParser("service-name-suffix = .mynamespace.svc.cluster.local")
-        .mapLookupQuery("myservice").lookup
+        .mapLookupQuery("myservice")
+        .lookup
         .serviceName should be("myservice.mynamespace.svc.cluster.local")
     }
 
     "return a mapped service name" in {
       val lookup = createParser("service-name-mappings.myservice.service-name = mappedmyservice")
-        .mapLookupQuery("myservice").lookup
+        .mapLookupQuery("myservice")
+        .lookup
       lookup.serviceName should be("mappedmyservice")
       lookup.portName should be(Some("http"))
       lookup.protocol should be(Some("tcp"))
@@ -97,7 +100,8 @@ class ServiceNameMapperSpec extends WordSpec with Matchers {
 
     "return a mapped port protocol" in {
       val lookup = createParser("service-name-mappings.myservice.port-protocol = udp")
-        .mapLookupQuery("myservice").lookup
+        .mapLookupQuery("myservice")
+        .lookup
       lookup.serviceName should be("myservice")
       lookup.portName should be(Some("http"))
       lookup.protocol should be(Some("udp"))

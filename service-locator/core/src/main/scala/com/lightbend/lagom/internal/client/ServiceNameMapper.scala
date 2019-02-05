@@ -7,7 +7,9 @@ package com.lightbend.lagom.internal.client
 import java.util.regex.Pattern
 
 import akka.discovery.Lookup
-import com.typesafe.config.{Config, ConfigObject, ConfigValueType}
+import com.typesafe.config.Config
+import com.typesafe.config.ConfigObject
+import com.typesafe.config.ConfigValueType
 import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._
@@ -35,22 +37,28 @@ private[lagom] class ServiceNameMapper(config: Config) {
   }
   private val defaultScheme = Some(config.getString("defaults.scheme")).filter(_.nonEmpty)
 
-  private val serviceLookupMapping = config.getObject("service-name-mappings").entrySet().asScala.map { entry =>
-    if (entry.getValue.valueType != ConfigValueType.OBJECT) {
-      throw new IllegalArgumentException(s"Illegal value type in service-name-mappings: ${entry.getKey} - ${entry.getValue.valueType}")
+  private val serviceLookupMapping = config
+    .getObject("service-name-mappings")
+    .entrySet()
+    .asScala
+    .map { entry =>
+      if (entry.getValue.valueType != ConfigValueType.OBJECT) {
+        throw new IllegalArgumentException(
+          s"Illegal value type in service-name-mappings: ${entry.getKey} - ${entry.getValue.valueType}")
+      }
+      val c = entry.getValue.asInstanceOf[ConfigObject].toConfig
+
+      def get(name: String) = if (c.hasPath(name)) Some(c.getString(name)) else None
+
+      val serviceName = get("service-name").getOrElse(entry.getKey) + serviceNameSuffix
+      val portName = get("port-name").orElse(defaultPortName)
+      val portProtocol = get("port-protocol").orElse(defaultPortProtocol)
+      val scheme = get("scheme")
+        .orElse(portName.flatMap(portNameSchemeMapping.get))
+        .orElse(defaultScheme)
+      entry.getKey -> ServiceNameMapping(entry.getKey, serviceName, portName, portProtocol, scheme)
     }
-    val c = entry.getValue.asInstanceOf[ConfigObject].toConfig
-
-    def get(name: String) = if (c.hasPath(name)) Some(c.getString(name)) else None
-
-    val serviceName = get("service-name").getOrElse(entry.getKey) + serviceNameSuffix
-    val portName = get("port-name").orElse(defaultPortName)
-    val portProtocol = get("port-protocol").orElse(defaultPortProtocol)
-    val scheme = get("scheme")
-      .orElse(portName.flatMap(portNameSchemeMapping.get))
-      .orElse(defaultScheme)
-    entry.getKey -> ServiceNameMapping(entry.getKey, serviceName, portName, portProtocol, scheme)
-  }.toMap
+    .toMap
 
   private[lagom] def mapLookupQuery(name: String): ServiceLookup = {
     // First attempt to construct lookup using configured mappings
@@ -59,7 +67,6 @@ private[lagom] class ServiceNameMapper(config: Config) {
         ServiceLookup(Lookup(mapping.serviceName, mapping.portName, mapping.portProtocol), mapping.scheme)
 
       case None =>
-
         // Next attempt to construct lookup using the service lookup regex
         val lookup = serviceLookupRegex match {
           case Some(pattern) =>
@@ -95,6 +102,10 @@ private[lagom] class ServiceNameMapper(config: Config) {
   }
 }
 
-private[lagom] case class ServiceNameMapping(name: String, serviceName: String, portName: Option[String], portProtocol: Option[String], scheme: Option[String])
+private[lagom] case class ServiceNameMapping(name: String,
+                                             serviceName: String,
+                                             portName: Option[String],
+                                             portProtocol: Option[String],
+                                             scheme: Option[String])
 
 private[lagom] case class ServiceLookup(lookup: Lookup, scheme: Option[String])
