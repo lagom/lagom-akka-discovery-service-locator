@@ -35,7 +35,6 @@ class ServiceNameMapperSpec extends WordSpec with Matchers {
       lookup shouldBe Lookup("myservice.mynamespace.svc.cluster.local", Some("fooname"), Some("fooprotocol"))
     }
 
-
     // ------------------------------------------------------------------------------
     // Assert simple Service Name lookup
     "parse an unqualified service name" in {
@@ -47,7 +46,6 @@ class ServiceNameMapperSpec extends WordSpec with Matchers {
       val lookup = parser.mapLookupQuery("myservice.mynamespace.svc.cluster.local").lookup
       lookup shouldBe Lookup("myservice.mynamespace.svc.cluster.local", defaultPortName, defaultProtocol)
     }
-
 
     // ------------------------------------------------------------------------------
     // Assert blank defaults
@@ -63,7 +61,6 @@ class ServiceNameMapperSpec extends WordSpec with Matchers {
       lookup shouldBe Lookup("myservice", defaultPortName, None)
     }
 
-
     // ------------------------------------------------------------------------------
     // Assert custom mappings
     "return a mapped service name" in {
@@ -77,7 +74,6 @@ class ServiceNameMapperSpec extends WordSpec with Matchers {
       val lookup = customParser.mapLookupQuery("myservice").lookup
       lookup shouldBe Lookup("mappedmyservice", Some("remoting"), Some("udp"))
     }
-
 
     // ------------------------------------------------------------------------------
     // Assert Schema mapping
@@ -93,8 +89,7 @@ class ServiceNameMapperSpec extends WordSpec with Matchers {
     }
 
     "not include scheme if service-name-mappings.myservice.scheme is blank" in {
-      val customParser = createParser(
-        """
+      val customParser = createParser("""
           |service-name-mappings.myservice {
           |  lookup = _remoting._udp.mappedmyservice
           |  scheme = ""
@@ -104,9 +99,8 @@ class ServiceNameMapperSpec extends WordSpec with Matchers {
       serviceLookup.scheme should be(None)
     }
 
-    "return a mapped schema for a mapped SVR"  in {
-      val customParser = createParser(
-        """
+    "return a mapped schema for a mapped SVR" in {
+      val customParser = createParser("""
           |service-name-mappings.myservice {
           |  lookup = _remoting._udp.mappedmyservice
           |  scheme = bar
@@ -116,9 +110,8 @@ class ServiceNameMapperSpec extends WordSpec with Matchers {
       serviceLookup.scheme should be(Some("bar"))
     }
 
-    "return a default schema for a mapped SVR"  in {
-      val customParser = createParser(
-        """
+    "return a default schema for a mapped SVR" in {
+      val customParser = createParser("""
           |service-name-mappings.myservice {
           |  lookup = _remoting._udp.mappedmyservice
           |}

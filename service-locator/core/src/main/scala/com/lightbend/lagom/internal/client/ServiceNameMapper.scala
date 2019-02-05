@@ -17,7 +17,6 @@ import scala.collection.JavaConverters._
 private[lagom] class ServiceNameMapper(config: Config) {
   private val logger = LoggerFactory.getLogger(this.getClass)
 
-
   private val defaultPortName = Some(config.getString("defaults.port-name")).filter(_.nonEmpty)
   private val defaultPortProtocol = Some(config.getString("defaults.port-protocol")).filter(_.nonEmpty)
   private val defaultScheme = Some(config.getString("defaults.scheme")).filter(_.nonEmpty)
@@ -68,8 +67,6 @@ private[lagom] class ServiceNameMapper(config: Config) {
   }
 }
 
-private[lagom] case class ServiceNameMapping(name: String,
-                                             lookup: Option[String],
-                                             scheme: Option[String])
+private[lagom] case class ServiceNameMapping(name: String, lookup: Option[String], scheme: Option[String])
 
 private[lagom] case class ServiceLookup(lookup: Lookup, scheme: Option[String])
