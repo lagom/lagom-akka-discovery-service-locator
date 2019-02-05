@@ -21,29 +21,27 @@ private[lagom] class ServiceNameMapper(config: Config) {
   private val defaultPortProtocol = readConfigValue(config, "defaults.port-protocol").toOption
   private val defaultScheme = readConfigValue(config, "defaults.scheme").toOption
 
-  private sealed trait ConfigValue {
+  sealed private trait ConfigValue {
     def toOption =
       this match {
         case NonEmpty(v) => Some(v)
-        case _ => None
+        case _           => None
       }
   }
   private object ConfigValue {
     def apply(value: String) =
-     if (value.trim.isEmpty) Empty
-     else NonEmpty(value.trim)
+      if (value.trim.isEmpty) Empty
+      else NonEmpty(value.trim)
   }
   private case object Undefined extends ConfigValue
   private case object Empty extends ConfigValue
   private case class NonEmpty(value: String) extends ConfigValue
 
-  private def readConfigValue(config: Config, name: String) = {
+  private def readConfigValue(config: Config, name: String) =
     if (config.hasPathOrNull(name)) {
       if (config.getIsNull(name)) Empty
       else ConfigValue(config.getString(name))
-    }
-    else Undefined
-  }
+    } else Undefined
 
   private val serviceLookupMapping: Map[String, ServiceLookup] =
     config
@@ -57,7 +55,6 @@ private[lagom] class ServiceNameMapper(config: Config) {
         }
         val configEntry = entry.getValue.asInstanceOf[ConfigObject].toConfig
 
-
         val lookup: Lookup =
           readConfigValue(configEntry, "lookup").toOption
             .map(parseSrv)
@@ -69,7 +66,7 @@ private[lagom] class ServiceNameMapper(config: Config) {
           readConfigValue(configEntry, "scheme") match {
             case Undefined => defaultScheme
             // this is the case the user explicitly set the scheme to empty string
-            case Empty => None
+            case Empty           => None
             case NonEmpty(value) => Option(value)
           }
 
