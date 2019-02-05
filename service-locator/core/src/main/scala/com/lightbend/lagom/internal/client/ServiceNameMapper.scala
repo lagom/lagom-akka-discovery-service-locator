@@ -4,8 +4,6 @@
 
 package com.lightbend.lagom.internal.client
 
-import java.util.regex.Pattern
-
 import akka.discovery.Lookup
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigObject
@@ -84,7 +82,5 @@ private[lagom] class ServiceNameMapper(config: Config) {
     serviceLookup
   }
 }
-
-private[lagom] case class ServiceNameMapping(name: String, lookup: Option[String], scheme: Option[String])
 
 private[lagom] case class ServiceLookup(lookup: Lookup, scheme: Option[String])
