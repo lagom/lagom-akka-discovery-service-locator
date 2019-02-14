@@ -10,7 +10,7 @@ Additionally, you will need to choose one of the existing [Akka Discovery][] imp
 
 [`AkkaDiscoveryServiceLocatorModule`]: https://github.com/lagom/lagom-akka-discovery-service-locator/blob/v0.0.12/service-locator/javadsl/src/main/java/com/lightbend/lagom/javadsl/akka/discovery/AkkaDiscoveryServiceLocatorModule.java
 [`AkkaDiscoveryServiceLocator`]: https://github.com/lagom/lagom-akka-discovery-service-locator/blob/v0.0.12/service-locator/javadsl/src/main/java/com/lightbend/lagom/javadsl/akka/discovery/AkkaDiscoveryServiceLocator.java
-[`AkkaDiscoveryComponents`]: https://github.com/lagom/lagom-akka-discovery-service-locator/blob/v0.0.12/service-locator/scaladsl/src/main/scala/com/lightbend/lagom/scaladsl/akka/discovery/AkkaDiscoveryServiceLocator.scala
+[`AkkaDiscoveryComponents`]: https://github.com/lagom/lagom-akka-discovery-service-locator/blob/v0.0.12/service-locator/scaladsl/src/main/scala/com/lightbend/lagom/scaladsl/akka/discovery/AkkaDiscoveryComponents.scala
 [Akka Discovery]: https://doc.akka.io/docs/akka/2.5/discovery/index.html
 
 ## Configuration for Lagom Java
