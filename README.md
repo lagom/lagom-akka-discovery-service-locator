@@ -2,12 +2,15 @@
 
 This project provides:
 
-* `AkkaDiscoveryServiceLocator`, a Lagom `ServiceLocator` implementation based on [Akka Discovery][]
-* `AkkaDiscoveryServiceLocatorModule`, a Guice `Module` to wire-up the `AkkaDiscoveryServiceLocator` when using runtime-time DI.
-* `AkkaDiscoveryComponents`, a cake component to wire-up the `AkkaDiscoveryServiceLocator` when using compile-time DI (macwire).
+* [`AkkaDiscoveryServiceLocator`][], a Lagom `ServiceLocator` implementation based on [Akka Discovery][]
+* [`AkkaDiscoveryServiceLocatorModule`][], a Guice `Module` to wire-up the `AkkaDiscoveryServiceLocator` when using runtime-time DI.
+* [`AkkaDiscoveryComponents`][], a cake component to wire-up the `AkkaDiscoveryServiceLocator` when using compile-time DI (macwire).
 
 Additionally, you will need to choose one of the existing [Akka Discovery][] implementations and configure it for production in your application.
 
+[`AkkaDiscoveryServiceLocatorModule`]: https://github.com/lagom/lagom-akka-discovery-service-locator/blob/v0.0.12/service-locator/javadsl/src/main/java/com/lightbend/lagom/javadsl/akka/discovery/AkkaDiscoveryServiceLocatorModule.java
+[`AkkaDiscoveryServiceLocator`]: https://github.com/lagom/lagom-akka-discovery-service-locator/blob/v0.0.12/service-locator/javadsl/src/main/java/com/lightbend/lagom/javadsl/akka/discovery/AkkaDiscoveryServiceLocator.java
+[`AkkaDiscoveryComponents`]: https://github.com/lagom/lagom-akka-discovery-service-locator/blob/v0.0.12/service-locator/scaladsl/src/main/scala/com/lightbend/lagom/scaladsl/akka/discovery/AkkaDiscoveryServiceLocator.scala
 [Akka Discovery]: https://doc.akka.io/docs/akka/2.5/discovery/index.html
 
 ## Configuration for Lagom Java
@@ -49,12 +52,11 @@ For `maven` users, add the dependencies to your pom.xml
 ```
 
 
-The Guice module [AkkaDiscoveryServiceLocatorModule](https://github.com/lagom/lagom-akka-discovery-service-locator/blob/master/service-locator/javadsl/src/main/java/com/lightbend/lagom/javadsl/akka/discovery/AkkaDiscoveryServiceLocatorModule.java) will be added by default to your project, but will only wire in the [AkkaDiscoveryServiceLocator](https://github.com/lagom/lagom-akka-discovery-service-locator/blob/master/service-locator/javadsl/src/main/java/com/lightbend/lagom/javadsl/akka/discovery/AkkaDiscoveryServiceLocator.java) when running in production mode.
+The Guice module [`AkkaDiscoveryServiceLocatorModule`][] will be added by default to your project, but will only wire in the [`AkkaDiscoveryServiceLocator`][] when running in production mode.
 
 In development, your Lagom application will keep using the Lagom's dev-mode `ServiceLocator`.
 
 Next, you will need to configure Akka Discovery in your `application.conf` file. Consult the [Akka Discovery][] documentation for further instructions.
-
 
 ## Configuration for Lagom Scala
 
@@ -74,7 +76,7 @@ lazy val `hello-impl` = (project in file("hello-impl"))
   )
 ```
 
-Wire [AkkaDiscoveryComponents](https://github.com/lagom/lagom-akka-discovery-service-locator/blob/master/service-locator/scaladsl/src/main/scala/com/lightbend/lagom/scaladsl/akka/discovery/AkkaDiscoveryServiceLocator.scala#L45) in your `ApplicationLoader`:
+Wire [`AkkaDiscoveryComponents`][] in your `ApplicationLoader`:
 
 ```scala
 class HelloServiceLoader extends LagomApplicationLoader {
