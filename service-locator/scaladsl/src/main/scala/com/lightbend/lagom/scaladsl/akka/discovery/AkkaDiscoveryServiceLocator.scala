@@ -8,16 +8,11 @@ import java.net.URI
 
 import akka.actor.ActorSystem
 import akka.discovery.Discovery
-import akka.discovery.ServiceDiscovery
 import com.lightbend.lagom.internal.client.AkkaDiscoveryHelper
-import com.lightbend.lagom.scaladsl.api.Descriptor
-import com.lightbend.lagom.scaladsl.api.ServiceLocator
-import com.lightbend.lagom.scaladsl.client.CircuitBreakerComponents
-import com.lightbend.lagom.scaladsl.client.CircuitBreakersPanel
-import com.lightbend.lagom.scaladsl.client.CircuitBreakingServiceLocator
+import com.lightbend.lagom.scaladsl.api.{Descriptor, ServiceLocator}
+import com.lightbend.lagom.scaladsl.client.{CircuitBreakersPanel, CircuitBreakingServiceLocator}
 
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
   * Akka discovery based implementation of the [[ServiceLocator]].
@@ -38,11 +33,4 @@ class AkkaDiscoveryServiceLocator(circuitBreakers: CircuitBreakersPanel, actorSy
     helper.locateAll(name).map(_.toList)
 }
 
-/**
-  * Mix this into your application cake to get the Akka Discovery based implementation of the Lagom
-  * [[ServiceLocator]].
-  */
-trait AkkaDiscoveryComponents extends CircuitBreakerComponents {
-  lazy val serviceLocator: ServiceLocator =
-    new AkkaDiscoveryServiceLocator(circuitBreakersPanel, actorSystem)(executionContext)
-}
+

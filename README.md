@@ -71,7 +71,7 @@ lazy val `hello-impl` = (project in file("hello-impl"))
   )
 ```
 
-Wire [AkkaDiscoveryComponents](https://github.com/lagom/lagom-akka-discovery-service-locator/blob/master/service-locator/scaladsl/src/main/scala/com/lightbend/lagom/scaladsl/akka/discovery/AkkaDiscoveryServiceLocator.scala#L45) in your `ApplicationLoader`:
+Wire [AkkaDiscoveryComponents](https://github.com/lagom/lagom-akka-discovery-service-locator/blob/master/service-locator/scaladsl/src/main/scala/com/lightbend/lagom/scaladsl/akka/discovery/AkkaDiscoveryComponents.scala) in your `ApplicationLoader`:
 
 ```scala
 class HelloServiceLoader extends LagomApplicationLoader {
