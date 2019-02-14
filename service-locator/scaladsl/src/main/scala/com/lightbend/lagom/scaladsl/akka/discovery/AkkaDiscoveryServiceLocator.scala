@@ -9,10 +9,13 @@ import java.net.URI
 import akka.actor.ActorSystem
 import akka.discovery.Discovery
 import com.lightbend.lagom.internal.client.AkkaDiscoveryHelper
-import com.lightbend.lagom.scaladsl.api.{Descriptor, ServiceLocator}
-import com.lightbend.lagom.scaladsl.client.{CircuitBreakersPanel, CircuitBreakingServiceLocator}
+import com.lightbend.lagom.scaladsl.api.Descriptor
+import com.lightbend.lagom.scaladsl.api.ServiceLocator
+import com.lightbend.lagom.scaladsl.client.CircuitBreakersPanel
+import com.lightbend.lagom.scaladsl.client.CircuitBreakingServiceLocator
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 /**
   * Akka discovery based implementation of the [[ServiceLocator]].
@@ -32,5 +35,3 @@ class AkkaDiscoveryServiceLocator(circuitBreakers: CircuitBreakersPanel, actorSy
   override def locateAll(name: String, serviceCall: Descriptor.Call[_, _]): Future[List[URI]] =
     helper.locateAll(name).map(_.toList)
 }
-
-
