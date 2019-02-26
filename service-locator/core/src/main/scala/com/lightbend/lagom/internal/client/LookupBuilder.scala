@@ -40,7 +40,27 @@ private[lagom] object LookupBuilder {
 
   private val SrvQuery = """^_(.+?)\._(.+?)\.(.+?)$""".r
 
-  private val ServiceName = "^[^.]([A-Za-z0-9-]\\.{0,1})+[^-_.]$".r
+  /**
+    * Validates domain name:
+    * - a node name has 1 to 63 chars
+    * - valid chars for a node name are: a-z, A-Z, 0-9 and -
+    * - a node name can't start with - character
+    * - a node name can't end with - character
+    * - nodes are separated by a . character
+    *
+    * Starts with a node:
+    * Node Pattern: (?!-)[A-Za-z0-9-]{1,63}(?<!-)
+    *      (?!-) => negative look ahead, first char can't be -
+    *      [A-Za-z0-9-]{1,63} => digits and letters, from 1 to 63
+    *      (?<!-) => negative look behind, last char can't be -
+    *
+    * A node can be followed by another nodes:
+    *    Pattern: (\.(?!-)[A-Za-z0-9-]{1,63}(?<!-)))*
+    *      . => starts with a . (dot)
+    *      node pattern => (?!-)[A-Za-z0-9-]{1,63}(?<!-)
+    *      * => match zero or more times
+    */
+  private val DomainName = "^((?!-)[A-Za-z0-9-]{1,63}(?<!-))((\\.(?!-)[A-Za-z0-9-]{1,63}(?<!-)))*$".r
 
   /**
     * Create a service Lookup from a string with format:
@@ -53,13 +73,12 @@ private[lagom] object LookupBuilder {
     * The string is parsed and dismembered to build a Lookup as following:
     * Lookup(serviceName).withPortName(portName).withProtocol(protocol)
     *
-    *
     * @throws NullPointerException If the passed string is null
     * @throws IllegalArgumentException If the string doesn't not conform with the SRV format
     */
   def parseSrv(str: String): Lookup =
     str match {
-      case SrvQuery(portName, protocol, serviceName) if validServiceName(serviceName) ⇒
+      case SrvQuery(portName, protocol, serviceName) if validDomainName(serviceName) ⇒
         Lookup(serviceName).withPortName(portName).withProtocol(protocol)
 
       case null ⇒
@@ -73,11 +92,11 @@ private[lagom] object LookupBuilder {
     */
   def isValidSrv(srv: String): Boolean =
     srv match {
-      case SrvQuery(_, _, serviceName) ⇒ validServiceName(serviceName)
+      case SrvQuery(_, _, serviceName) ⇒ validDomainName(serviceName)
       case _ ⇒ false
     }
 
-  private def validServiceName(name: String): Boolean =
-    ServiceName.pattern.asPredicate().test(name)
+  private def validDomainName(name: String): Boolean =
+    DomainName.pattern.asPredicate().test(name)
 
 }
