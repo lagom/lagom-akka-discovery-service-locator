@@ -22,17 +22,11 @@ scala:
 git:
   depth: false
 
+# This defines the default "test" stage
+script: sbt ++$TRAVIS_SCALA_VERSION headerCheck test:headerCheck scalafmtCheck test:scalafmtCheck test
+
 jobs:
   include:
-    - stage: lagom-15
-      script: bin/build-lagom15.sh
-      name: "Build for Lagom 1.5 (does headers and formatting checks and tests)"
-    - stage: lagom-14
-      script: bin/build-lagom14.sh
-      name: "Build for Lagom 1.4 (only tests against Lagom 1.4)"  
-      # not needed to test on all JDK, it's enough to compile for Lagom 1.4 and test it
-      env:
-        - TRAVIS_JDK=adopt@1.8.192-12
     - stage: publish
       script: sbt +publish
       env:
@@ -42,6 +36,13 @@ jobs:
         # Ensure that publishing works and produces valid artifacts
         - sbt +publishLocal
         - find . -name *.pom -exec xmllint --noout -schema http://maven.apache.org/xsd/maven-4.0.0.xsd {} \;
+    - stage: lagom-14
+      script: 
+        - sbt -Dlagom.build.version=1.4.11 ++$TRAVIS_SCALA_VERSION test
+      name: "Build for Lagom 1.4 (only tests against Lagom 1.4)"  
+      # not needed to test on all JDK, it's enough to compile for Lagom 1.4 and test it
+      env:
+        - TRAVIS_JDK=adopt@1.8.192-12        
 
 stages:
   - name: publish

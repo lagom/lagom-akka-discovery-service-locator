@@ -1,1 +1,0 @@
-sbt ++$TRAVIS_SCALA_VERSION test
