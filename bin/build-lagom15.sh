@@ -1,0 +1,1 @@
+sbt -Dlagom.build.version=1.4.11 ++$TRAVIS_SCALA_VERSION headerCheck test:headerCheck scalafmtCheck test:scalafmtCheck test
