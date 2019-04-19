@@ -5,8 +5,13 @@
 package com.lightbend.lagom.scaladsl.akka.discovery
 
 import akka.NotUsed
-import com.lightbend.lagom.scaladsl.api.{Service, ServiceCall, ServiceLocator}
-import com.lightbend.lagom.scaladsl.server.{LagomApplication, LagomApplicationContext, LagomServer, LocalServiceLocator}
+import com.lightbend.lagom.scaladsl.api.Service
+import com.lightbend.lagom.scaladsl.api.ServiceCall
+import com.lightbend.lagom.scaladsl.api.ServiceLocator
+import com.lightbend.lagom.scaladsl.server.LagomApplication
+import com.lightbend.lagom.scaladsl.server.LagomApplicationContext
+import com.lightbend.lagom.scaladsl.server.LagomServer
+import com.lightbend.lagom.scaladsl.server.LocalServiceLocator
 import com.lightbend.lagom.scaladsl.testkit.ServiceTest
 import org.scalatest._
 import play.api.libs.ws.WSClient
@@ -27,7 +32,6 @@ class AkkaDiscoveryServiceLocatorSpec extends AsyncWordSpec with Matchers with B
     }
   }
 
-
   private val server = ServiceTest.startServer(ServiceTest.defaultSetup) { ctx =>
     new LagomTestApplication(ctx)
   }
@@ -35,10 +39,9 @@ class AkkaDiscoveryServiceLocatorSpec extends AsyncWordSpec with Matchers with B
   override protected def afterAll() = server.stop()
 
   class LagomTestApplication(ctx: LagomApplicationContext)
-    extends LagomApplication(ctx)
+      extends LagomApplication(ctx)
       with AhcWSComponents
       with AkkaDiscoveryComponents {
-
 
     override def lagomServer: LagomServer = serverFor[TestService](new TestServiceImpl)
   }
@@ -48,9 +51,11 @@ class AkkaDiscoveryServiceLocatorSpec extends AsyncWordSpec with Matchers with B
 
     override def descriptor = {
       import Service._
-      named("test-service").withCalls(
-        pathCall("/hello/:name", hello _)
-      ).withAutoAcl(true)
+      named("test-service")
+        .withCalls(
+          pathCall("/hello/:name", hello _)
+        )
+        .withAutoAcl(true)
     }
   }
 
