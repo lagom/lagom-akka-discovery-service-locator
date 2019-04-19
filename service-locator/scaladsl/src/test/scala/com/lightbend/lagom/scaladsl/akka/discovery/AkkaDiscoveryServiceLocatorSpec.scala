@@ -28,13 +28,11 @@ class AkkaDiscoveryServiceLocatorSpec extends AsyncWordSpec with Matchers with B
   }
 
 
-  private val server = ServiceTest.startServer(
-    ServiceTest.defaultSetup
-      .withCassandra()
-  ) { ctx =>
+  private val server = ServiceTest.startServer(ServiceTest.defaultSetup) { ctx =>
     new LagomTestApplication(ctx)
   }
 
+  override protected def afterAll() = server.stop()
 
   class LagomTestApplication(ctx: LagomApplicationContext)
     extends LagomApplication(ctx)
