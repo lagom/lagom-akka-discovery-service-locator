@@ -7,7 +7,7 @@ import sbt._
 object Dependencies {
 
   object Versions {
-    val Lagom = "1.5.0"
+    val Lagom = "1.5.1"
     val Akka = "2.5.22"
     val ScalaTest = "3.0.7"
   }
