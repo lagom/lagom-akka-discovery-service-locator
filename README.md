@@ -1,3 +1,9 @@
+# Archived
+
+This project has been integrated in Lagom 1.5.1 and 1.4.12 and therefore this repository is now archived. 
+
+Further developement will be done on Lagom project.
+
 # Akka Discovery based ServiceLocator
 
 This project provides:
